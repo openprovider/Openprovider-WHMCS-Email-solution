@@ -1,6 +1,5 @@
 <?php
 
-
 use WHMCS\Database\Capsule;
 
 use WHMCS\Module\Server\emailSolution\Helper;
