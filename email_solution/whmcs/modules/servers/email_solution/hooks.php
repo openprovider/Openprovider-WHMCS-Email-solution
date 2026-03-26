@@ -16,7 +16,7 @@ add_hook('AdminProductConfigFieldsSave', 1, function ($vars) {
             // } else {
             //     assignConfigOption($vars['pid'], $groupID, 1);
             // }
-            logModuleCall('MailCow Email Account', __FUNCTION__, $vars, '', ['status' => 'successfully save changes ']);
+            logModuleCall('Email Solution',__FUNCTION__,$vars,'',['status'=>'successfully save changes ']);
         }
 
         if (Capsule::table('tblcustomfields')->where('fieldname', 'like', 'domain|%')->where('type','product')->where('relid' , $vars['pid'])->count() == 0) {
@@ -37,7 +37,7 @@ add_hook('AdminProductConfigFieldsSave', 1, function ($vars) {
 
 
     }catch(Exception $e){
-        logModuleCall('MailCow Email Account', __FUNCTION__, $vars, $e->getMessage(), ['error' => $e->getMessage()]);
+        logModuleCall('Email Solution',__FUNCTION__,$vars,$e->getMessage(),['error'=>$e->getMessage()]);
     }
 });
 
@@ -58,7 +58,7 @@ function assignConfigOption($pid, $groupid, $status)
             }
         }
     } catch (Exception $e) {
-        logModuleCall('MailCow Email Account', __FUNCTION__, '', $e->getMessage(), ['error' => $e->getMessage()]);
+        logModuleCall('Email Solution',__FUNCTION__,'',$e->getMessage(),['error'=>$e->getMessage()]);
     }
 }
 
@@ -111,7 +111,7 @@ function createConfigurableOption($pid)
             return Capsule::table('tblproductconfiggroups')->where('name', $groupname)->value('id');
         }
     } catch (Exception $e) {
-        logModuleCall('MailCow Email Account', __FUNCTION__, $pid, $e->getMessage(), ['error' => $e->getMessage()]);
+        logModuleCall('Email Solution',__FUNCTION__,$pid,$e->getMessage(),['error'=>$e->getMessage()]);
     }
 }
 
@@ -154,7 +154,7 @@ function insertPriceForOptions($subOptionId)
                 } 
             }
         } catch (Exception $e) {
-        logModuleCall('MailCow Email Account', __FUNCTION__, '', $e->getMessage(), ['error' => $e->getMessage()]);
+            logModuleCall('Email Solution',__FUNCTION__,'',$e->getMessage(),['error'=>$e->getMessage()]);
         }
     }
  
