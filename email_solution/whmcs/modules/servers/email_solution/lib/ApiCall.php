@@ -86,8 +86,20 @@ class ApiCall
             $data['password'] = '********';
         }
 
-        logModuleCall("Email Solution", $action, $data, json_decode($response));
-        return ['httpcode' => $httpCode, 'result' => json_decode($response)];
+        $decodedResponse = json_decode($response);
+        logModuleCall("Email Solution", $action, $data, $this->sanitizeResponseToken($decodedResponse));
+        return ['httpcode' => $httpCode, 'result' => $decodedResponse];
+    }
+
+    // mask auth token before logging
+    private function sanitizeResponseToken($response)
+    {
+        if (is_object($response) && isset($response->data) && is_object($response->data) && isset($response->data->token) && $response->data->token !== '') {
+            $response = clone $response;
+            $response->data = clone $response->data;
+            $response->data->token = '********';
+        }
+        return $response;
     }
 
     public function postCurl($data,$token, $baseUrl,$action ){
