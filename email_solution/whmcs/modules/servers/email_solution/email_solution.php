@@ -15,6 +15,17 @@ if (file_exists($apiFile)) {
     require_once $apiFile;
 }
 
+// Mask credentials in $params to prevent leaking them into the Module Log on exceptions.
+function email_solution_maskSensitiveParams($params)
+{
+    foreach (['password', 'serverpassword', 'serveraccesshash'] as $key) {
+        if (isset($params[$key]) && $params[$key] !== '') {
+            $params[$key] = '********';
+        }
+    }
+    return $params;
+}
+
 function email_solution_MetaData()
 {
     return array(
@@ -161,7 +172,7 @@ function email_solution_TestConnection(array $params)
         logModuleCall(
             'Email Solution',
             __FUNCTION__,
-            $params,
+            email_solution_maskSensitiveParams($params),
             $e->getMessage(),
             $e->getTraceAsString()
         );
@@ -335,7 +346,7 @@ function email_solution_AdminServicesTabFields(array $params)
             throw new Exception($errorMsg);
         }
     } catch (Exception $e) {
-        logModuleCall('Email Solution', __FUNCTION__, $params, $e->getMessage(), $e->getTraceAsString());
+        logModuleCall('Email Solution', __FUNCTION__, email_solution_maskSensitiveParams($params), $e->getMessage(), $e->getTraceAsString());
     }
 }
 
@@ -521,7 +532,7 @@ function email_solution_CreateAccount(array $params)
             throw new Exception($errorMsg);
         }
     } catch (Exception $e) {
-        logModuleCall('Email Solution ', __FUNCTION__, $params, $e->getMessage(), $e->getTraceAsString());
+        logModuleCall('Email Solution ', __FUNCTION__, email_solution_maskSensitiveParams($params), $e->getMessage(), $e->getTraceAsString());
         return $e->getMessage();
     }
     return 'success';
@@ -602,7 +613,7 @@ function email_solution_TerminateAccount(array $params)
             throw new Exception($errorMsg);
         }
     } catch (Exception $e) {
-        logModuleCall('Email Solution ', __FUNCTION__, $params, $e->getMessage(), $e->getTraceAsString());
+        logModuleCall('Email Solution ', __FUNCTION__, email_solution_maskSensitiveParams($params), $e->getMessage(), $e->getTraceAsString());
         return $e->getMessage();
     }
     return 'success';
@@ -613,7 +624,7 @@ function  email_solution_UnsuspendAccount(array $params)
 {
     try {
     } catch (Exception $e) {
-        logModuleCall('Email Solution ', __FUNCTION__, $params, $e->getMessage(), $e->getTraceAsString());
+        logModuleCall('Email Solution ', __FUNCTION__, email_solution_maskSensitiveParams($params), $e->getMessage(), $e->getTraceAsString());
         return $e->getMessage();
     }
     return 'success';
@@ -623,7 +634,7 @@ function  email_solution_SuspendAccount(array $params)
 {
     try {
     } catch (Exception $e) {
-        logModuleCall('Email Solution', __FUNCTION__, $params, $e->getMessage(), $e->getTraceAsString());
+        logModuleCall('Email Solution', __FUNCTION__, email_solution_maskSensitiveParams($params), $e->getMessage(), $e->getTraceAsString());
         return $e->getMessage();
     }
     return 'success';
@@ -879,6 +890,6 @@ function email_solution_ClientArea(array $params)
             ),
         );
     } catch (Exception $e) {
-        logModuleCall('Email Solution', __FUNCTION__, $params, $e->getMessage(), $e->getTraceAsString());
+        logModuleCall('Email Solution', __FUNCTION__, email_solution_maskSensitiveParams($params), $e->getMessage(), $e->getTraceAsString());
     }
 }
