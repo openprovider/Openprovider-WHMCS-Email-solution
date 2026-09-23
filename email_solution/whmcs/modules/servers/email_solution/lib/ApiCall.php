@@ -82,13 +82,24 @@ class ApiCall
         }
         curl_close($curl);
 
-        if(isset($data['password'])){
-            $data['password'] = '********';
-        }
+        $data = $this->maskPasswordFields($data);
 
         $decodedResponse = json_decode($response);
         logModuleCall("Email Solution", $action, $data, $this->sanitizeResponseToken($decodedResponse));
         return ['httpcode' => $httpCode, 'result' => $decodedResponse];
+    }
+
+    // Mask any key containing "password" before logging.
+    private function maskPasswordFields($data)
+    {
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                if (stripos($key, 'password') !== false) {
+                    $data[$key] = '********';
+                }
+            }
+        }
+        return $data;
     }
 
     // mask auth token before logging
