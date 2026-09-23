@@ -82,12 +82,35 @@ class ApiCall
         }
         curl_close($curl);
 
-        if(isset($data['password'])){
-            $data['password'] = '********';
-        }
+        $data = $this->maskPasswordFields($data);
 
-        logModuleCall("Email Solution", $action, $data, json_decode($response));
-        return ['httpcode' => $httpCode, 'result' => json_decode($response)];
+        $decodedResponse = json_decode($response);
+        logModuleCall("Email Solution", $action, $data, $this->sanitizeResponseToken($decodedResponse));
+        return ['httpcode' => $httpCode, 'result' => $decodedResponse];
+    }
+
+    // Mask any key containing "password" before logging.
+    private function maskPasswordFields($data)
+    {
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                if (stripos($key, 'password') !== false) {
+                    $data[$key] = '********';
+                }
+            }
+        }
+        return $data;
+    }
+
+    // mask auth token before logging
+    private function sanitizeResponseToken($response)
+    {
+        if (is_object($response) && isset($response->data) && is_object($response->data) && isset($response->data->token) && $response->data->token !== '') {
+            $response = clone $response;
+            $response->data = clone $response->data;
+            $response->data->token = '********';
+        }
+        return $response;
     }
 
     public function postCurl($data,$token, $baseUrl,$action ){
