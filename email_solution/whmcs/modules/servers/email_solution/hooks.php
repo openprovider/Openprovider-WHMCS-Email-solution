@@ -164,7 +164,7 @@ add_hook('AfterCronJob', 1, function ($vars) {
     try {
         require_once __DIR__ . '/lib/MigrationRunner.php';
         (new \Module\Server\emailSolution\MigrationRunner\MigrationRunner())->run();
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
         logActivity('Email Solution migrations failed: ' . $e->getMessage());
     }
 });
