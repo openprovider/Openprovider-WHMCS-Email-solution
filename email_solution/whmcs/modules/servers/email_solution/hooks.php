@@ -159,4 +159,12 @@ function insertPriceForOptions($subOptionId)
     }
  
 
-
+// Runs pending migrations from ./migrations once each, from cron so large log tables never slow down a page load.
+add_hook('AfterCronJob', 1, function ($vars) {
+    try {
+        require_once __DIR__ . '/lib/MigrationRunner.php';
+        (new \Module\Server\emailSolution\MigrationRunner\MigrationRunner())->run();
+    } catch (\Throwable $e) {
+        logActivity('Email Solution migrations failed: ' . $e->getMessage());
+    }
+});
