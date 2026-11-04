@@ -66,6 +66,7 @@ class MigrationRunner
         }
 
         Capsule::schema()->create(self::TABLE, function ($table) {
+            $table->increments('id');
             $table->string('module');
             $table->string('type');
             $table->string('migration');
